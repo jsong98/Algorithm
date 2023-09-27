@@ -12,13 +12,12 @@ public class BOJ_11726_2xn타일링 {
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		int n = Integer.parseInt(br.readLine());
 		long[] dp = new long[n+1];
+		dp[0] = 1;
 		dp[1] = 1;
 		for(int i = 2; i <= n; i++) {
-			for(int j = 1; j < i; j++) {
-				dp[i] += (dp[j] + dp[i-j]);
-			}
+			dp[i] = (dp[i-1]%10007) + (dp[i-2]%10007);
 		}
-		System.out.println(Arrays.toString(dp));
+		System.out.println(dp[n]%10007);
 	}
 
 }
