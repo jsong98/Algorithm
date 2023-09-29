@@ -13,6 +13,17 @@ public class BOJ_2096_내려가기 {
 	static int[][] max;
 	static int[][] min;
 	
+	static class Pos {
+		int r;
+		int c;
+		int weight;
+		
+		public Pos(int r, int c, int weight) {
+			this.r = r;
+			this.c = c;
+			this.weight = weight;
+		}
+	}
     
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		int n = Integer.parseInt(br.readLine());
@@ -31,6 +42,7 @@ public class BOJ_2096_내려가기 {
 			max[0][i] = arr[0][i];
 			min[0][i] = arr[0][i];
 		}
+		
 		
 		
 	}
