@@ -3,6 +3,7 @@ package BaekJoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class BOJ_2096_내려가기 {
@@ -12,39 +13,41 @@ public class BOJ_2096_내려가기 {
 	static int[][] arr;
 	static int[][] max;
 	static int[][] min;
-	
-	static class Pos {
-		int r;
-		int c;
-		int weight;
-		
-		public Pos(int r, int c, int weight) {
-			this.r = r;
-			this.c = c;
-			this.weight = weight;
-		}
-	}
+	static int[] dc = {-1,0,1};
     
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		int n = Integer.parseInt(br.readLine());
-		arr = new int[n][n];
-		max = new int[n][n];
-		min = new int[n][n];
+		int[] maxDp = new int[3];
+		int[] minDp = new int[3];
 		
 		for(int i = 0; i < n; i++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
-			for(int j = 0; j < n; j++) {
-				arr[i][j] = Integer.parseInt(st.nextToken());
+			
+			int i1 = Integer.parseInt(st.nextToken());
+			int i2 = Integer.parseInt(st.nextToken());
+			int i3 = Integer.parseInt(st.nextToken());
+			
+			if(i == 0) {
+				maxDp[0] = minDp[0] = i1;
+				maxDp[1] = minDp[1] = i2;
+				maxDp[2] = minDp[2] = i3;
+			} else  {
+				int temp1 = maxDp[0];
+				int temp2 = maxDp[2];
+				maxDp[0] = Math.max(maxDp[0], maxDp[1]) + i1;
+				maxDp[2] = Math.max(maxDp[1], maxDp[2]) + i3;
+				maxDp[1] = Math.max(Math.max(temp1, maxDp[1]), temp2) + i2;
+				
+				temp1 = minDp[0];
+				temp2 = minDp[2];
+				minDp[0] = Math.min(minDp[0], minDp[1]) + i1;
+				minDp[2] = Math.min(minDp[1], minDp[2]) + i3;
+				minDp[1] = Math.min(Math.min(temp1, minDp[1]), temp2) + i2;
 			}
 		}
-		
-		for(int i = 0; i < n; i++) {
-			max[0][i] = arr[0][i];
-			min[0][i] = arr[0][i];
-		}
-		
-		
-		
+//		System.out.println(Arrays.toString(maxDp));
+//				System.out.println(Arrays.toString(minDp));
+		System.out.println(Math.max(maxDp[0], Math.max(maxDp[1], maxDp[2])) + " " + Math.min(Math.min(minDp[0], minDp[1]), minDp[2]));
 	}
 
 }
