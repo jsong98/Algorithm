@@ -20,6 +20,7 @@ public class BOJ_11659_구간합구하기4 {
 		arr = new int[n];
 		st = new StringTokenizer(br.readLine());
 		arr[0] = Integer.parseInt(st.nextToken());
+		
 		for(int i = 1; i < n; i++) {
 			arr[i] = Integer.parseInt(st.nextToken()) + arr[i-1];
 		}
