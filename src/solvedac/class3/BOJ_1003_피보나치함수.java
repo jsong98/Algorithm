@@ -12,26 +12,26 @@ public class BOJ_1003_피보나치함수 {
 	
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		int T = Integer.parseInt(br.readLine());
-		
+		dp = new int[41][2];
 		dp[0][0] = 1;
 		dp[0][1] = 0;
 		dp[1][0] = 0;
 		dp[1][1] = 1;
-		
-		while(T-- > 0 ) {
+		while(T-- > 0) {
 			int n = Integer.parseInt(br.readLine());
 			fibo(n);
-			System.out.println(dp[n][0] + " " + dp[n][1]);
+			sb.append(dp[n][0] + " " + dp[n][1] + "\n");
 		}
+		System.out.println(sb);
 	}
 
-	public static int[] fibo(int i) {
-		if(i == 0) {
-			return new int[] {1, 0};
-		} else if(i == 0) {
-			return new int[] {0, 1};
-		} else {
-			return new int[] {fibo(i-1)[0] + fibo(i-2)[0], fibo(i-1)[1] + fibo(i-2)[1]};
+	public static int[] fibo(int n) {
+		
+		if(dp[n][0] == 0 && dp[n][1] == 0) {
+			dp[n][0] = fibo(n-1)[0] + fibo(n-2)[0];
+			dp[n][1] = fibo(n-1)[1] + fibo(n-2)[1];
 		}
+		
+		return dp[n];
 	}
 }
