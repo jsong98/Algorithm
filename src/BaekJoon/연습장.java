@@ -2,7 +2,7 @@ package BaekJoon;
 
 import java.util.Arrays;
 
-public class Practice {
+public class 연습장 {
 	
 	static int[] arr;
 	static int[] output;
