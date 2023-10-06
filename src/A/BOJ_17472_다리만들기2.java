@@ -105,6 +105,7 @@ public class BOJ_17472_다리만들기2 {
 			}
 			
 			if(pq.isEmpty()) {
+				// 연결되지 않은 섬이 있는데 pq가 비어있다 == 모든 섬을 연결할 수 없음.
 				if(chk())  {
 					System.out.println(-1);
 					return;
@@ -119,6 +120,7 @@ public class BOJ_17472_다리만들기2 {
 		System.out.println(res);
 	}
 	
+	// 연결되지 않는 섬이 있는지 check.
 	public static boolean chk() {
 		for(int i = 0; i < n; i++) {
 			for(int j = 0; j < m; j++) {
