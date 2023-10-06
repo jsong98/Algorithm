@@ -14,16 +14,15 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 /*
-9 6
-0 0 0 0 1 0
-0 0 0 0 0 0
-0 1 0 0 0 1
-0 0 0 0 0 0
-0 0 0 0 0 0
-0 1 0 0 1 1
-0 0 0 0 0 0
-0 0 0 0 0 0
-0 1 0 0 0 0
+8 8
+0 0 0 1 1 1 1 0
+0 1 1 1 1 0 1 0
+0 1 0 1 1 1 0 0
+0 1 0 0 0 1 0 0
+0 0 0 1 0 0 1 0
+0 0 0 0 0 1 0 0
+0 1 1 1 0 0 0 0
+0 1 0 0 0 1 0 0
 */
 
 public class BOJ_17472_다리만들기2 {
@@ -99,34 +98,23 @@ public class BOJ_17472_다리만들기2 {
 			for(Pos p : islands) {
 				findEdges(p);
 			}
-//			System.out.println(pq.size());
-			if(pq.isEmpty()) {
-				System.out.println(-1);
-				return;
-			}
 			
 			// 아직 연결 안된 섬들 중에서 가장 짧은 다리로 연결 가능한 경우 찾기
-			while(visited[pq.peek().end.r][pq.peek().end.c]) {
+			while(!pq.isEmpty() && visited[pq.peek().end.r][pq.peek().end.c]) {
 				pq.poll();
-				if(pq.isEmpty()) break;
 			}
-			Bridge b = pq.poll();
-			if(b != null) {
-				res += b.dis;
-				conquer(new Pos(b.end.r, b.end.c));
-			}
-			for(boolean[] test : visited) {
-				System.out.println(Arrays.toString(test));
-			}
-			System.out.println();
+			
 			if(pq.isEmpty()) {
 				if(chk())  {
 					System.out.println(-1);
 					return;
 				}
 				break;
+			} else {
+				Bridge b = pq.poll();
+				res += b.dis;
+				conquer(new Pos(b.end.r, b.end.c));
 			}
-			
 		}
 		System.out.println(res);
 	}
