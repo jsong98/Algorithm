@@ -15,6 +15,12 @@ import java.util.StringTokenizer;
 
 4 3 3 2 / 2 1 1 0
 
+5 4 7
+1 2 3 4
+7 8 9 10
+13 14 15 16
+19 20 21 22
+25 26 27 28
 
 */
 
@@ -84,11 +90,11 @@ public class BOJ_16926_배열돌리기1 {
 					r--;
 				}
 			}
+			for(int[] test : temp) {
+				System.out.println(Arrays.toString(test));
+			}
+			System.out.println(move + " " + r + " " + c);
 			move = bottomEdge-1;
-			
-			leftEdge++;
-			bottomEdge--;
-			rightEdge++;
 			
 			if(move == 0) {
 				System.out.println(r + " " + c);
@@ -97,18 +103,26 @@ public class BOJ_16926_배열돌리기1 {
 			}
 			
 			for(int i = 0; i < move; i++) {	// 오른쪽
-				if(r != stdR+1) {
-					temp[r-1][c] = arr[r][c];
-					r--;
-				} else {
-					temp[r-1][c] = arr[r][c];
-					c--;
-				}
+				temp[r-1][c] = arr[r][c];
+				r--;
 			}
-		}
+			System.out.println(r + " " + c);
+			
+			leftEdge++;
+			bottomEdge--;
+			rightEdge++;
+			
 			for(int[] test : temp) {
 				System.out.println(Arrays.toString(test));
 			}
+			
+			stdR++;
+			stdC--;
+			r = stdR;
+			c = stdC;
+			
+		}
+			
 	}
 
 }
