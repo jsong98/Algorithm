@@ -24,6 +24,13 @@ import java.util.StringTokenizer;
 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0
+
+5 5 2
+1 0 1 1 1
+0 1 1 1 1
+1 0 1 0 1
+1 1 0 1 0
+1 0 1 0 1
 */
 
 public class BOJ_17135_캐슬디펜스 {
@@ -79,7 +86,6 @@ public class BOJ_17135_캐슬디펜스 {
 		int max = Integer.MIN_VALUE;
 		for(int[] pos : cases) {
 			cnt = 0;
-			deleteList = new ArrayList<>();
 			temp = new int[n+1][m];
 			for(int i = 0; i < n; i++) {
 				for(int j = 0; j < m; j++) {
@@ -87,13 +93,9 @@ public class BOJ_17135_캐슬디펜스 {
 				}
 			}
 			while(!endChk()) {
-				for(int[] test : temp) {
-					System.out.println(Arrays.toString(test));
-				}
-				System.out.println();
+				deleteList = new ArrayList<>();
 				for(int p : pos) {
 					PriorityQueue<Pos> pq = new PriorityQueue<>(new Comparator<Pos>() {
-						
 						@Override
 						public int compare(Pos p1, Pos p2) {
 							if(p1.dis == p2.dis) {
@@ -122,19 +124,9 @@ public class BOJ_17135_캐슬디펜스 {
 					}
 				}
 				
-				for(int[] test : temp) {
-					System.out.println(Arrays.toString(test));
-				}
-				System.out.println();
 				move();
-				for(int[] test : temp) {
-					System.out.println(Arrays.toString(test));
-				}
-				System.out.println("---------------------------------------------");
 			}
 			if(cnt > max) max = cnt;
-			System.out.println(cnt);
-			System.out.println("*********************************************");
 		}
 		
 		System.out.println(max);
@@ -147,8 +139,8 @@ public class BOJ_17135_캐슬디펜스 {
 			if(nr < 0 || nr >= n || nc < 0 || nc >= m) continue;
 			if(visited[nr][nc] || getDist(ar, ac, nr, nc) > d) continue;
 			visited[nr][nc] = true;
-			if(temp[nr][nc] == 1 && pq.size() != 1) pq.add(new Pos(nr, nc, getDist(ar, ac, nr, nc)));
-			dfs(new Pos(nr, nc, p.dis+1), pq);
+			if(temp[nr][nc] == 1) pq.add(new Pos(nr, nc, getDist(ar, ac, nr, nc)));
+			dfs(new Pos(nr, nc, getDist(ar, ac, nr, nc)), pq);
 		}
 	}
 	
