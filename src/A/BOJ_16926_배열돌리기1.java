@@ -112,34 +112,6 @@ public class BOJ_16926_배열돌리기1 {
 					r--;
 				}
 			}
-<<<<<<< HEAD
-			for(int[] test : temp) {
-				System.out.println(Arrays.toString(test));
-			}
-			System.out.println(move + " " + r + " " + c);
-			move = bottomEdge-1;
-			
-			if(move == 0) {
-				System.out.println(r + " " + c);
-				temp[r-1][c-1] = arr[r][c-1];
-				break;
-			}
-			
-			for(int i = 0; i < move; i++) {	// 오른쪽
-				temp[r-1][c] = arr[r][c];
-				r--;
-			}
-			System.out.println(r + " " + c);
-			
-			leftEdge++;
-			bottomEdge--;
-			rightEdge++;
-			
-			for(int[] test : temp) {
-				System.out.println(Arrays.toString(test));
-			}
-			
-=======
 
 			move = bottomEdge - topEdge - 1;
 
@@ -159,21 +131,14 @@ public class BOJ_16926_배열돌리기1 {
 			leftEdge++;
 			bottomEdge--;
 			rightEdge--;
->>>>>>> 1847718782f427d3412da31a1ee86804a217a489
 			stdR++;
 			stdC--;
 			r = stdR;
 			c = stdC;
-<<<<<<< HEAD
-			
-		}
-			
-=======
 
 		}
 		
 		arr = temp;
->>>>>>> 1847718782f427d3412da31a1ee86804a217a489
 	}
 
 }
