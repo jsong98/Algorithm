@@ -1,177 +1,174 @@
 package A;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
-
-/*
-2 1 3
-0 0
-0 0
-1 1
-1 2 1 2
-*/
+import java.util.*;
+import java.io.*;
 
 public class BOJ_19238_스타트택시 {
-	
-	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	static StringBuilder sb = new StringBuilder();
-	static int n, m, ff;
-	static int[][] map;
-	static boolean[][] visited;
-	static int[] dr = {-1,0,1,0};
-	static int[] dc = {0,-1,0,1};
-	static HashMap<String, String> ctm;
-	
-	static class Taxi {
-		int r;
-		int c;
-		int f;
-		int move;
-		boolean full;
-		String srt;
-		int endR;
-		int endC;
-		int cMove;
-		
-		public Taxi(int r, int c, int f, int move) {
-			this.r = r;
-			this.c = c;
-			this.f = f;
-			this.move = move;
-		}
-	}
-	
-	static class Pos {
-		int r;
-		int c;
-		
-		public Pos(int r, int c) {
-			this.r = r;
-			this.c = c;
-		}
-	}
-	
-	public static void main(String[] args) throws IOException {
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
-		ff = Integer.parseInt(st.nextToken());
-		map = new int[n+1][n+1];
-		visited = new boolean[n+1][n+1];
-		ctm = new HashMap<>();
-		for(int i = 1; i <= n; i++) {
-			st = new StringTokenizer(br.readLine());
-			for(int j = 1; j <= n; j++) {
-				map[i][j] = Integer.parseInt(st.nextToken());
-			}
-		}
-		
-		st = new StringTokenizer(br.readLine());
-		Taxi t = new Taxi(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), ff, 0);
-		for(int i = 0; i < m; i++) {
-			st = new StringTokenizer(br.readLine());
-			String s1 = st.nextToken() + " " + st.nextToken();
-			String s2 = st.nextToken() + " " + st.nextToken();
-			
-			ctm.put(s1, s2);
-		}
-		
-		int res = bfs(t);
-		System.out.println(res);
-	}
-	
-	public static int bfs(Taxi t) {
-		String fs = t.r + " " + t.c;
-		if(ctm.containsKey(fs)) {
-			String[] d = ctm.get(fs).split(" ");
-			visited[t.r][t.c]= true;
-			t.full = true;
-			t.srt = fs;
-			t.endR = Integer.parseInt(d[0]);
-			t.endC = Integer.parseInt(d[1]);
-			t.cMove = 0;
-		}
-		
-		Queue<Taxi> que = new LinkedList<>();
-		que.offer(t);
-		outer:
-		while(!que.isEmpty()) {
-			Taxi p = que.poll();
-			
-			if(p.full) {
-				if(p.r == p.endR && p.c == p.endC) {
-//					System.out.println(p.srt + " " + p.r + " " + p.c + " " + p.f + " " + p.cMove);
-					p.f += p.cMove*2;
-//					System.out.println(p.f);
-					p.move = 0;
-					p.full = false;
-					ctm.remove(p.srt);
-					visited = new boolean[n+1][n+1];
-					que.clear();
-					String tmp = p.r + " " + p.c;
-					if(ctm.containsKey(tmp) && !ctm.get(tmp).equals(tmp)) {
-//						System.out.println("chk" + " " + p.r + " " + p.c);
-						String[] d = ctm.get(p.r + " " + p.c).split(" ");
-						visited = new boolean[n+1][n+1];
-						visited[p.r][p.c] = true;
-						p.full = true;
-						p.srt = p.r + " " + p.c;
-						p.endR = Integer.parseInt(d[0]);
-						p.endC = Integer.parseInt(d[1]);
-						p.cMove = 0;
-					}
-					if(ctm.isEmpty()) {
-						return p.f;
-					}
-				}
-			}
-			
-			if(p.f == 0) {
-				continue;
-			}
-			
-			for(int i = 0; i < 4; i++) {
-				int nr = p.r + dr[i];
-				int nc = p.c + dc[i];
-				if(nr < 1 || nr > n || nc < 1 || nc > n) continue;
-				if(visited[nr][nc] || map[nr][nc] == 1) continue;
-				String s = nr + " " + nc;
-				if(!p.full && ctm.containsKey(s)) {
-					String[] d = ctm.get(s).split(" ");
-					visited = new boolean[n+1][n+1];
-					que.clear();
-					visited[nr][nc] = true;
-					Taxi np = new Taxi(nr, nc, p.f-1, p.move+1);
-					np.full = true;
-					np.srt = s;
-					np.endR = Integer.parseInt(d[0]);
-					np.endC = Integer.parseInt(d[1]);
-					np.cMove = 0;
-					que.offer(np);
-					continue outer;
-				} else {
-					visited[nr][nc] = true;
-					Taxi np = new Taxi(nr, nc, p.f-1, p.move+1);
-					np.full = p.full;
-					np.srt = p.srt;
-					np.endR = p.endR;
-					np.endC = p.endC;
-					np.cMove = p.cMove+1;
-					que.offer(np);
-				} 
-			}
-//			for(boolean[] test : visited) {
-//				System.out.println(Arrays.toString(test));
-//			}
-//			System.out.println();
-		}
-		return -1;
-	}
+    static class Taxi {
+        int x, y, move;
 
+        Taxi(int x, int y, int move) {
+            this.x = x;
+            this.y = y;
+            this.move = move;
+        }
+    }
+
+    static class Passenger {
+        int id, sx, sy, ex, ey;
+
+        Passenger() { }
+    }
+
+    static int N, M, fuel;
+    static int[][] arr = new int[21][21];
+    static Taxi taxi;
+    static Passenger taken = null;
+    static Map<Integer, Passenger> passMap = new HashMap<>();
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+
+        // input
+        st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        fuel = Integer.parseInt(st.nextToken());
+
+        for (int i = 1; i < N + 1; i++) {
+            st = new StringTokenizer(br.readLine());
+
+            for (int j = 1; j < N + 1; j++) {
+                arr[i][j] = Integer.parseInt(st.nextToken());
+            }
+        }
+
+        st = new StringTokenizer(br.readLine());
+        taxi = new Taxi(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), 0);
+
+        for (int i = 0; i < M; i++) {
+            st = new StringTokenizer(br.readLine());
+
+            Passenger p = new Passenger();
+            p.id =  i + 2;  // 벽이 1 이라서 2 부터 넘버링
+            p.sx = Integer.parseInt(st.nextToken());
+            p.sy = Integer.parseInt(st.nextToken());
+            p.ex = Integer.parseInt(st.nextToken());
+            p.ey = Integer.parseInt(st.nextToken());
+
+            passMap.put(p.id, p);
+
+            // 출발지는 겹치지 않기 때문에 맵에 기록
+            arr[p.sx][p.sy] = p.id;
+        }
+
+        // solution
+        solution();
+    }
+
+    // 모든 승객을 데려다 줄때까지 BFS 를 반복하며 연료의 양을 확인한다.
+    static void solution() {
+        while (!passMap.isEmpty()) {
+            int toStartFuel = bfs();
+            fuel -= toStartFuel;
+
+            if (fuel < 0) break;
+
+            int toDestFuel = bfs();
+            fuel -= toDestFuel;
+
+            if (fuel < 0) break;
+
+            fuel += toDestFuel * 2;
+        }
+
+        System.out.println(fuel < 0 ? -1 : fuel);
+    }
+
+    static int bfs() {
+        Queue<Taxi> q = new LinkedList<>();
+        Queue<Passenger> candidates = new LinkedList<>();
+        boolean[][] visited = new boolean[21][21];
+        int[] dx = {-1, 1, 0, 0};
+        int[] dy = {0, 0, -1, 1};
+        
+        int prevMove = taxi.move;
+        visited[taxi.x][taxi.y] = true;
+        q.add(taxi);
+
+        while (!q.isEmpty()) {
+            Taxi now = q.poll();
+
+            // 이동 중에 연료가 떨어지면 종료
+            if (fuel - now.move < 0) {
+                return Integer.MAX_VALUE;
+            }
+
+            // 택시 이동 시간대가 다르고 candidates 가 이미 존재하면 break
+            if (prevMove != now.move && !candidates.isEmpty()) {
+                break;
+            }
+
+            prevMove = now.move;
+
+            if (taken == null) {
+                // 택시가 비어있는 경우 가장 가까운 승객 후보를 만나면 candidates 에 추가
+                int id = arr[now.x][now.y];
+
+                if (id > 1) {
+                    Passenger p = passMap.get(id);
+                    candidates.add(p);
+                }
+            } else {
+                // 택시에 승객이 있는 경우 도착지를 만나면 종료
+                if (now.x == taken.ex && now.y == taken.ey) {
+                    passMap.remove(taken.id);
+                    taken = null;
+                    taxi = new Taxi(now.x, now.y, 0);
+                    return prevMove;
+                }
+            }
+
+            // 동서남북 이동
+            for (int i = 0 ; i < 4; i++) {
+                int nx = now.x + dx[i];
+                int ny = now.y + dy[i];
+
+                if (0 < nx && nx < N+1 && 0 < ny && ny < N+1) {
+                   if (arr[nx][ny] != 1 && visited[nx][ny] == false) {
+                       q.add(new Taxi(nx, ny, now.move + 1));
+                       visited[nx][ny] = true;
+                   } 
+                }
+            }
+        }
+
+        // while 문이 끝났는데 candidates 에 아무것도 없으면 벽에 막혀서 도달못함
+        if (candidates.isEmpty()) {
+            return Integer.MAX_VALUE;
+        }
+
+        taken = findNearest(candidates);
+        taxi = new Taxi(taken.sx, taken.sy, 0);
+        arr[taken.sx][taken.sy] = 0;
+        return prevMove;
+    }
+
+    // 같은 거리면 x 가 작고, y 가 작은 사람으로
+    static Passenger findNearest(Queue<Passenger> q) {
+        Passenger target = q.poll();
+
+        while (!q.isEmpty()) {
+            Passenger compare = q.poll();
+
+            if (compare.sx < target.sx) {
+                target = compare;
+            } else if (compare.sx == target.sx && compare.sy < target.sy) {
+                target = compare;
+            }
+        }
+
+        return target;
+    }
 }
