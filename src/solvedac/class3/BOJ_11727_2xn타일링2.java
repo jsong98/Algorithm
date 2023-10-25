@@ -8,11 +8,15 @@ public class BOJ_11727_2xn타일링2 {
 	
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringBuilder sb = new StringBuilder();
-	static int[] dp;
+	static long[] dp;
 	
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		int n = Integer.parseInt(br.readLine());
-		dp = new int[n+1];
+		if(n==1) {
+			System.out.println(1);
+			return ;
+		}
+		dp = new long[n+1];
 		dp[0] = 0;
 		dp[1] = 1;
 		dp[2] = 3;
