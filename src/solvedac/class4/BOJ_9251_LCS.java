@@ -10,12 +10,14 @@ ACAYKP
 CAPCAK
 
 ACAK - 4
-
-ABCDEFGHI
-ABDFAH
-
-ABCD
-EFGH
+ 
+  A C A Y K P
+C 0 1 1 1 1 1
+A 1 1 2 2 2 2
+P 1 1 2 2 2 3
+C 1 2 2 2 2 3
+A 1 2 3 3 3 3
+K 1 2 3 3 4 4
 
 */
 
