@@ -26,10 +26,12 @@ public class BOJ_9251_LCS {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringBuilder sb = new StringBuilder();
 	static int[] dp;
+	static String s1;
+	static String s2;
 	
 	public static void main(String[] args) throws IOException {
-		String s1 = br.readLine();
-		String s2 = br.readLine();
+		s1 = br.readLine();
+		s2 = br.readLine();
 		
 		String max = "";
 		String min = "";
