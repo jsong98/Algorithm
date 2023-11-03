@@ -25,57 +25,26 @@ public class BOJ_9251_LCS {
 	
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringBuilder sb = new StringBuilder();
-	static int[] dp;
-	static String s1;
-	static String s2;
+	static int[][] dp;
+	static char[] s1;
+	static char[] s2;
 	
 	public static void main(String[] args) throws IOException {
-		s1 = br.readLine();
-		s2 = br.readLine();
+		s1 = br.readLine().toCharArray();
+		s2 = br.readLine().toCharArray();
 		
-		String max = "";
-		String min = "";
+		dp = new int[s1.length+1][s2.length+1];
 		
-		if(s1.length() >= s2.length()) {
-			max = s1;
-			min = s2;
-		} else {
-			max = s2;
-			min = s1;
-		}
-		
-		dp = new int[max.length()];
-		
-		int idx = 0;
-		int srt = 0;
-		for(int i = 0; i < min.length(); i++) {
-			if(max.charAt(0) == min.charAt(i)) {
-				dp[0] = 1;
-				srt = i+1;
-				break;
-			} else {
-				dp[0] = 0;
-			}
-		}
-		
-		for(int i = 1; i < dp.length; i++) {
-			idx = srt;
-			while(idx < min.length()) {
-				if(max.charAt(i) == min.charAt(idx)) {
-					dp[i] = dp[i-1] + 1;
-					srt = idx+1;
-					break;
-				} else {
-					idx++;
+		for(int i = 1; i <= s1.length; i++) {
+			for(int j = 1; j <= s2.length; j++) {
+				if(s1[i - 1] == s2[j - 1]) {
+					dp[i][j] = dp[i - 1][j - 1] + 1;	
+				}	else {
+					dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
 				}
-				
-			}
-			if(dp[i] == 0) {
-				dp[i] = dp[i-1];
 			}
 		}
-		
-		System.out.println(dp[dp.length-1]);
+		System.out.println(dp[s1.length][s2.length]);
 	}
 
 }
