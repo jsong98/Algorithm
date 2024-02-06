@@ -147,9 +147,16 @@ public class BOJ_21608_상어초등학교 {
                 }
             }
             Node pos = pq.poll();
-            System.out.println(std + " " + pos.r + " " + pos.c);
+//            System.out.println(std + " " + pos.r + " " + pos.c);
+
             pos.stdId = std;
             visited[pos.r][pos.c] = true;
+            for (int k = 0; k < 4; k++) {
+                int nr = room[pos.r][pos.c].r + dr[k];
+                int nc = room[pos.r][pos.c].c + dc[k];
+                if(nr <= 0 || nr > N ||  nc <= 0 || nc > N || visited[nr][nc]) continue;
+                room[nr][nc].adjEmpty--;
+            }
             pq.clear();
         }
 
