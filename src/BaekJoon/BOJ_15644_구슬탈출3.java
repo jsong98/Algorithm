@@ -17,9 +17,35 @@ output
 
 */
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
 public class BOJ_15644_구슬탈출3 {
 
-    public static void main(String[] args) {
+    static int N, M;
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static StringBuilder sb  = new StringBuilder();
+    static String[][] map;
 
+    public static void main(String[] args) throws IOException {
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        map = new String[N][M];
+
+        for (int i = 0; i < N; i++) {
+            String[] line = br.readLine().split("");
+            for (int j = 0; j < M; j++) {
+                map[i][j] = line[j];
+            }
+        }
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+
+            }
+        }
     }
 }
