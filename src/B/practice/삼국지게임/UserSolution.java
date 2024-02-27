@@ -65,16 +65,10 @@ class UserSolution {
     }
     int ally(char[] mMonarchA, char[] mMonarchB)
     {
-        // 12랑 3이랑 싸워서 적대관계가 됐는데 이후에 3이랑 9랑 동맹, 근데 12의 적대관계가 업데이트 안됨 . .
-        /*
-        400 caozhi huanggai holro 0
-        300 yuanshu huanggai 1
-        300 caopi yuanshu -2 
-        */
-        check();
+//        check();
         String a = new String(mMonarchA);   // A군주 이름
         String b = new String(mMonarchB);   // B군주 이름
-        System.out.println("-----------------" + a + " " + b + " " + getMonarch.get(a).allyNum + " " + getMonarch.get(b).allyNum);
+//        System.out.println("-----------------" + a + " " + b + " " + getMonarch.get(a).allyNum + " " + getMonarch.get(b).allyNum);
         int allyA = getMonarch.get(a).allyNum;      // A군주가 포함된 동맹 번호
         int allyB = getMonarch.get(b).allyNum;      // B군주가 포함된 동맹 번호
         if(allyA == allyB) return -1;   // A와 B가 동맹관계인 경우
@@ -89,6 +83,11 @@ class UserSolution {
         // B군주와 적대관계인 군주들을 A군주 동맹에 포함시킴
         enemyRel.get(allyA).addAll(enemyRel.get(allyB));
 
+        // B군주와 적대관계였던 군주들의 적대관계에 A군주 추가
+        for(int i : enemyRel.get(allyB)) {
+            enemyRel.get(i).add(allyA);
+        }
+
         // allyB에 속한 Monarch들의 allyNum을 allyA로 바꿔줌
         Monarch node = allies.get(allyB).head;
         while(node != null) {
@@ -100,7 +99,7 @@ class UserSolution {
     }
     int attack(char[] mMonarchA, char[] mMonarchB, char[] mGeneral)
     {
-        check();
+//        check();
         String a = new String(mMonarchA);
         String b = new String(mMonarchB);
         String g = new String(mGeneral);
@@ -115,25 +114,33 @@ class UserSolution {
 
         // 공격 동맹 중 전장과 인접한 곳이 있는지 확인, 인접하면 보유한 병사 수의 절반을 공격병사 수에 더함
         int attacker = 0;   // 공격 병사 수
+        int attackerNodeCount = 0;
         Monarch attackerNode = allies.get(allyA).head;
         while(attackerNode != null) {
-            if(attackerNode.name == null) continue;
+            if(attackerNode.name == null) {
+                attackerNode = attackerNode.next;
+                continue;
+            }
 
             if(Math.abs(attackerNode.r - destR) <= 1 && Math.abs(attackerNode.c - destC) <= 1) {
                 int soldiers = attackerNode.soldierNum/2;
                 attackerNode.soldierNum -= soldiers;
                 attacker += soldiers;
+                attackerNodeCount++;
             }
 
             attackerNode = attackerNode.next;
         }
 
-        if(attacker == 0) return -2;    // 전투가 일어나지 않은 경우
+        if(attackerNodeCount == 0) return -2;    // 전투가 일어나지 않은 경우
 
         int defender = 0;   // 방어 병사 수
         Monarch defenderNode = allies.get(allyB).head;
         while(defenderNode != null) {
-            if(defenderNode.name == null) continue;
+            if(defenderNode.name == null) {
+                defenderNode = defenderNode.next;
+                continue;
+            }
 
             if(Math.abs(defenderNode.r - destR) <= 1 && Math.abs(defenderNode.c - destC) <= 1) {
                 if(defenderNode.name.equals(b)) {   // 자기 자신인 경우
@@ -173,7 +180,7 @@ class UserSolution {
     }
     int recruit(char[] mMonarch, int mNum, int mOption)
     {
-        check();
+//        check();
         String a = new String(mMonarch);
 
         if(mOption == 0) {
@@ -183,8 +190,11 @@ class UserSolution {
             int count = 0;
             Monarch monarch = allies.get(getMonarch.get(a).allyNum).head;
             while(monarch != null) {
-                if(monarch.name == null) continue;
+                if(monarch.name == null) {
 
+                    monarch = monarch.next;
+                    continue;
+                }
                 monarch.soldierNum += mNum;
                 count += monarch.soldierNum;
 
@@ -198,18 +208,18 @@ class UserSolution {
         return -1;
     }
 
-    void check() {
-        for (int i = 1; i <= 16; i++) {
-            Monarch monarch = allies.get(i).head;
-            System.out.print(i + " ");
-//            while (monarch != null) {
-//                System.out.print(monarch.name + "/" + monarch.allyNum + " ");
-//
-//                monarch = monarch.next;
-//            }
-//            System.out.println();
-            System.out.println(enemyRel.get(i).toString());
-        }
-        System.out.println();
-    }
+//    void check() {
+//        for (int i = 1; i <= 16; i++) {
+//            Monarch monarch = allies.get(i).head;
+//            System.out.print(i + " ");
+////            while (monarch != null) {
+////                System.out.print(monarch.name + "/" + monarch.allyNum + " ");
+////
+////                monarch = monarch.next;
+////            }
+////            System.out.println();
+//            System.out.println(enemyRel.get(i).toString());
+//        }
+//        System.out.println();
+//    }
 }
