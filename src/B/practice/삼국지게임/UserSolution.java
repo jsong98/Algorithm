@@ -7,7 +7,7 @@ class UserSolution {
 
     static HashMap<Integer, Ally> allies;   // key(동맹번호)에 해당하는 동맹(연결리스트) value 매핑
     static HashMap<Integer, HashSet<Integer>> enemyRel; // key(동맹번호)와 적대관계(동맹번호집합) value 매핑
-    static HashMap<String, Monarch> getMonarch;     // key(군주이름)과 동맹번호 value 매핑
+    static HashMap<String, Monarch> getMonarch;     // key(군주이름)과 군주 value 매핑
     static int allyCount;
 
     static class Monarch {  // 군주 클래스
@@ -42,7 +42,6 @@ class UserSolution {
 
     void init(int N, int[][] mSoldier, char[][][] mMonarch)
     {
-//        int totalCount = N * N;
         allyCount = 0;  // 동맹번호
         allies = new HashMap<>();   // 동맹번호에 해당하는 동맹 매핑
         enemyRel = new HashMap<>(); // 동맹번호에 해당하는 동맹과 적대관계인 군주들 매핑
@@ -65,10 +64,8 @@ class UserSolution {
     }
     int ally(char[] mMonarchA, char[] mMonarchB)
     {
-//        check();
         String a = new String(mMonarchA);   // A군주 이름
         String b = new String(mMonarchB);   // B군주 이름
-//        System.out.println("-----------------" + a + " " + b + " " + getMonarch.get(a).allyNum + " " + getMonarch.get(b).allyNum);
         int allyA = getMonarch.get(a).allyNum;      // A군주가 포함된 동맹 번호
         int allyB = getMonarch.get(b).allyNum;      // B군주가 포함된 동맹 번호
         if(allyA == allyB) return -1;   // A와 B가 동맹관계인 경우
@@ -99,7 +96,6 @@ class UserSolution {
     }
     int attack(char[] mMonarchA, char[] mMonarchB, char[] mGeneral)
     {
-//        check();
         String a = new String(mMonarchA);
         String b = new String(mMonarchB);
         String g = new String(mGeneral);
@@ -176,16 +172,14 @@ class UserSolution {
             return 0;
         }
 
-//        return -3;
     }
     int recruit(char[] mMonarch, int mNum, int mOption)
     {
-//        check();
         String a = new String(mMonarch);
 
         if(mOption == 0) {
-            getMonarch.get(a).soldierNum += mNum;
-            return getMonarch.get(a).soldierNum;
+
+            return getMonarch.get(a).soldierNum += mNum;
         } else if (mOption == 1) {
             int count = 0;
             Monarch monarch = allies.get(getMonarch.get(a).allyNum).head;
@@ -207,19 +201,4 @@ class UserSolution {
 
         return -1;
     }
-
-//    void check() {
-//        for (int i = 1; i <= 16; i++) {
-//            Monarch monarch = allies.get(i).head;
-//            System.out.print(i + " ");
-////            while (monarch != null) {
-////                System.out.print(monarch.name + "/" + monarch.allyNum + " ");
-////
-////                monarch = monarch.next;
-////            }
-////            System.out.println();
-//            System.out.println(enemyRel.get(i).toString());
-//        }
-//        System.out.println();
-//    }
 }
