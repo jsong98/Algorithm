@@ -1,0 +1,93 @@
+/*
+ceiling(E e): 지정된 요소보다 크거나 같은 요소 중에서 가장 작은 요소를 반환
+class Student {
+    int id;
+    int score;
+
+    public Student(int id, int score) {
+        this.id = id;
+        this.score = score;
+    }
+}
+
+class ScoreComparator implements Comparator<Student> {
+    @Override
+    public int compare(Student s1, Student s2) {
+        if (s1.score != s2.score) {
+            return Integer.compare(s1.score, s2.score);
+        } else {
+            return Integer.compare(s1.id, s2.id); // 점수가 같으면 id로 오름차순 정렬
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        TreeSet<Student> treeSet = new TreeSet<>(new ScoreComparator());
+        
+        treeSet.add(new Student(1, 90));
+        treeSet.add(new Student(2, 80));
+        treeSet.add(new Student(3, 95));
+        treeSet.add(new Student(4, 85));
+
+        // 특정 score 이상의 학생을 찾기 위해 ceiling 메서드 사용
+        Student ceilingStudent = treeSet.ceiling(new Student(0, 90)); // score 90 이상인 학생 찾기
+        System.out.println("Ceiling Student: " + ceilingStudent.id + " - " + ceilingStudent.score);
+    }
+}
+*/
+
+class ScoreSet {
+  int grade
+  String gender;
+// 점수별 오름차순, 점수가 같다면 id별 오름차순
+  TreeSet<Student> score;
+}
+
+class Student {
+  int id;
+  int grade;
+  String gender;
+  int score;
+}
+
+static HashMap<mId, Student> studentInfo;
+static HashMap<String, ScoreSet> getScoreSet;    // add & remove에 쓸 자료구조
+
+init() {
+  studentInfo 초기화
+  1~3학년, 남|여로 6개의 ScoreSet 생성 및 초기화
+  (grade + gender)를 hashing해서 하나의 문자열로 만듦.
+  그 문자열을 key로, 해당하는 ScoreSet을 value로 해서 getScoreSet에 저장
+}
+
+int add(int mId, int mGrade, char mGender[7], int mScore) {
+  학생 id을 key, 학생 인스턴스를 value로 studentInfo에 저장
+  학생의 학년과 성별에 맞는 ScoreSet을 getScoreSet에서 찾아서 데이터 넣기
+  mGrade학년 mGender인 학생 중에서 점수가 가장 높은 학생의 ID를 반환
+  점수가 가장 높은 학생이 여러 명이라면, 그 중에서 ID가 가장 큰 값을 반환
+}
+
+int remove(int mId) {
+  mId로 studenInfo에서 학생 인스턴스 가져옴
+    없으면 return 0
+  학생의 학년과 성별에 맞는 ScoreSet을 getScoreSet에서 찾아와서
+  ScoreSet.remove(StudentInstance);
+    이후 empty면 return 0;
+  삭제 후에 mId 학생의 학년과 성별이 동일한 학생 중에서 점수가 가장 낮은 학생의 ID를 반환
+  점수가 가장 낮은 학생이 여러 명이라면, 그 중에서 ID가 가장 작은 값을 반환
+  삭제 후에, 학년과 성별이 동일한 학생이 없다면, 0을 반환
+}
+
+int query(int mGradeCnt, int mGrade[], int mGenderCnt, char mGender[][7], int mScore) {
+  treeSet과 동일한 comparator를 적용한 pq 선언
+
+  mGrade[]와 mGender[][7] 순회하면서 나올 수 있는 경우의 수에 대해
+  init에서 처리한 것과 동일하게 (grade + gender) 해싱. 이 결과들을 Collection에 저장.
+  Collection에서 하나씩 빼서, 그 값을 key로 getScoreSet에서 value를 찾음
+  찾은 getScoreSet들의 첫번째 값들만 얕은 복사 떠서 pq에 넣음
+
+  mGrade 학년 집합과 mGender 성별 집합에 속하면서,
+  점수가 mScore 이상인 학생 중에서 점수가 가장 낮은 학생의 ID를 반환
+  점수가 가장 낮은 학생이 여러 명이라면, 그 중에서 ID가 가장 작은 값을 반환
+}
