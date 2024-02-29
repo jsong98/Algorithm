@@ -63,6 +63,7 @@ class Solution
                 char ans = st.nextToken().charAt(0);
                 if (ret != ans)
                 {
+                    System.out.println("CMD_MOVECURSOR---------------------------------------------------------------");
                     correct = false;
                 }
             }
@@ -75,6 +76,8 @@ class Solution
                 int ans = Integer.parseInt(st.nextToken());
                 if (ret != ans)
                 {
+                    System.out.println("CMD_COUNT---------------------------------------------------------------");
+                    System.out.println(ret + " " + ans);
                     correct = false;
                 }
             }

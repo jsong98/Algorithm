@@ -74,6 +74,18 @@ void insert(char mChar) {
     새 Node 생성, id = Pointer.node.id-1, value = mChar
         getNodeSet에 char에 맞게 저장
 
+    =================================
+    같은 위치에 계속해서 insert하는 경우
+        node의 왼쪽에만 insert
+        node의 property로 long remain 추가
+        초기화 시 remain = 90002
+        해당 node에 위치해서 추가할 때,
+        새로운 node.id = Pointer.node.id-Pointer.node.remain
+        remain--;
+        중복회피
+    =================================
+
+
     생성한 Node를 Pointer의 왼쪽에 연결
 
     Pointer의 h값과 w값 업데이트
@@ -88,7 +100,7 @@ char moveCursor(int mRow, int mCol) {
     커서의 위치를 메모장의 mRow행 mCol 열 문자의 왼쪽으로 이동
     해당 위치가 비어있는 경우, 커서의 위치를 문자열의 마지막 문자 오른쪽으로 이동
     커서의 다음 문자를 리턴
-    커서가 문자열 끝에 위치하여, 커서의 다음 문자가 없는 경우, "$"를 리턴
+    커서가 문자열 끝에 위치하여, 커서의 다음 문자가 없는 경우, '$'를 리턴
     */
 
     mRow를 key로 getRowHead에서 Node 불러옴

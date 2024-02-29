@@ -110,7 +110,7 @@ class UserSolution {
 
         // 공격 동맹 중 전장과 인접한 곳이 있는지 확인, 인접하면 보유한 병사 수의 절반을 공격병사 수에 더함
         int attacker = 0;   // 공격 병사 수
-        int attackerNodeCount = 0;
+        int attackerNodeCount = 0;  // 공격에 참여하는 군주수
         Monarch attackerNode = allies.get(allyA).head;
         while(attackerNode != null) {
             if(attackerNode.name == null) {
