@@ -1,0 +1,40 @@
+void init() {
+    테케 시작 시, 고용된 병사는 없음.
+}
+
+void hire(int mID, int mTeam, int mScore) {
+    고유번호가 mId, 소속팀이 mTeam, 평판 점수가 mScore인 병사를 고용
+    한 테스트 케이스 내 동일한 mId를 가진 병사가 여러 번 고용되는
+    경우는 없음이 보장
+    1 <= mID <= 100,000
+    1 <= mTeam <= 5
+    1 <= mScore <= 5
+}
+
+void fire(int mID) {
+    고유번호가 mID인 병사를 해고
+    fire()함수 호출 시, 고유번호가 mID인 병사가 고용되어 있음이 보장
+}
+
+void updateSoldier(int mID, int mScore) {
+    고유번호가 mID인 병사의 평판 점수를 mScore로 변경
+    고유번호가 mID인 병사가 고용되어 있음이 보장
+}
+
+void updateTeam(int mTeam, int mChangeScore) {
+    소속팀이 mTeam인 병사들의 평판 점수를 모두 변경
+    소속팀이 mTeam인 병사가 한 명 이상 고용되어 있음이 보장
+
+    아래의 규칙에 따라 평판 점수 변경
+    1. 변경 전 평판 점수 + mChangeScore가 5보다 클 경우, 5로 변경
+    2. 변경 전 평판 점수 + mChangeSocre가 1보다 작을 경우, 1로 변경
+    3. 그 외 평판 점수를 평판 점수 + mChangeScore로 변경
+
+    -4 <= mChagneSocre <= 4
+}
+
+int bestSolider(int mTeam) {
+    소속팀이 mTeam인 병사들 중 평판 점수가 가장 높은 병사의 고유번호 반환
+    평판 점수가 가장 높은 병사가 여러 명일 경우, 고유 번호 순
+    소속팀이 mTeam인 병사가 한 명 이상 고용되어 있음이 보장
+}

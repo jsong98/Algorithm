@@ -68,20 +68,20 @@ public class BOJ_14501_퇴사 {
     public static void main(String[] args) throws IOException {
         N = Integer.parseInt(br.readLine());
         dp = new int[N+1];
-        input = new int[N+1][2];
+        input = new int[N][2];
 
-        for (int i = 1; i <= N; i++) {
+        for (int i = 0; i < N; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            input[i][0] = Integer.parseInt(st.nextToken());
-            input[i][1] = Integer.parseInt(st.nextToken());
+            input[i][0] = Integer.parseInt(st.nextToken()); // i번째 상담에 걸리는 일수
+            input[i][1] = Integer.parseInt(st.nextToken()); // i번째 상담에서 받을 수 있는 금액
         }
 
-        // i는 dp 배열의 index == 최대 일수
-        for (int i = 1; i <= N; i++) {
-            // j는 각 상담을 나타내는 pointer
-            for (int j = 1; j <= N; j++) {
-                
+        for (int i = 0; i < N; i++) {
+            if(i+input[i][0] <= N) {
+                dp[i+input[i][0]] = Math.max(dp[i+input[i][0]], dp[i] + input[i][1]);
             }
+            dp[i+1] = Math.max(dp[i+1], dp[i]);
         }
+        System.out.println(dp[N]);
     }
 }
