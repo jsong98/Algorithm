@@ -3,7 +3,7 @@ package A;
 import java.io.*;
 import java.util.*;
 
-public class Main {
+public class HSAT_교차로 {
 
     static class Car {
         int time;//들어온시간
