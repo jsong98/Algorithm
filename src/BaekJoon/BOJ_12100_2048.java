@@ -3,283 +3,175 @@ package BaekJoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.StringTokenizer;
 
 public class BOJ_12100_2048 {
-    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    static StringBuilder sb = new StringBuilder();
-    static int N, ret;
-    static int[][] map;
-    static int[][] originMap;
-    static int[] dr = {-1, 0, 1, 0};    // 상, 우, 하, 좌
-    static int[] dc = {0, 1, 0, -1};
 
-    static class Pos {
-        int r;
-        int c;
-        int value;
-        boolean isCombined;
+    static int N;
+    static int[][] map; // 원본 배열
 
-        Pos(int r, int c, int value) {
-            this.r = r;
-            this.c = c;
-            this.value = value;
-        }
-    }
+    static int[] swipeArr; // 백트래킹에서 swipe 명령 조합할 배열
+
+    static int max = 0; // 구할 최댓값
 
     public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+
         N = Integer.parseInt(br.readLine());
+
         map = new int[N][N];
-        originMap = new int[N][N];
         for (int i = 0; i < N; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
+            st = new StringTokenizer(br.readLine(), " ");
             for (int j = 0; j < N; j++) {
                 map[i][j] = Integer.parseInt(st.nextToken());
-                originMap[i][j] = map[i][j];
             }
-        }   // input
-        ret = 2;
-//        int[] arr = {1,0,1,2,1};
-//        for (int i = 0; i < arr.length; i++) {
-//            move(arr[i]);
-//            for (int r = 0; r < N; r++) {
-//                for (int c = 0; c < N; c++) {
-//                    System.out.print(map[r][c] + " ");
-//                }
-//                System.out.println();
-//            }
-//            System.out.println();
-//        }
-//        move(0);
-        backtracking(0, new int[5]);    // 완탐 경우의 수 생성
+        }
 
-        System.out.println(ret);
+        swipeArr = new int[5]; // 백트래킹에서 swipe 명령 조합할 배열
+
+        bt(0); // 백트래킹 시작
+
+        System.out.println(max);
     }
 
-    static void backtracking(int idx, int[] result) {
-        if (idx == 5) {
+    static void bt(int depth) {
+        // 명령을 5번 수행한 뒤 종료
+        if (depth == 5) {
+            // deep-copy
+            int[][] newMap = new int[N][N];
             for (int i = 0; i < N; i++) {
                 for (int j = 0; j < N; j++) {
-                    map[i][j] = originMap[i][j];
+                    newMap[i][j] = map[i][j];
+                }
+            }
+            // 조합된 명령을 순서대로 수행하며 배열 갱신
+            for (int i = 0; i < 5; i++) {
+                int s = swipeArr[i];
+                newMap = swipeAll(s, newMap);
+            }
+            // 모든 명령이 종료된 후 가장 큰 블록값 구하기
+            int num = 0;
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < N; j++) {
+                    num = Math.max(num, newMap[i][j]);
                 }
             }
 
-            for (int i = 0; i < result.length; i++) {
-                move(result[i]);
-//                System.out.println(result[i]);
-//                for (int r = 0; r < N; r++) {
-//                    for (int c = 0; c < N; c++) {
-//                        System.out.print(map[r][c] + " ");
-//                    }
-//                    System.out.println();
-//                }
-//                System.out.println();
-            }
-
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < N; j++) {
-                    if (map[i][j] > ret) ret = map[i][j];
-                }
-            }
+            // 최댓값 구하기
+            max = Math.max(max, num);
 
             return;
         }
 
+        // 상 하 좌 우 스와이프 조합 구하기
         for (int i = 0; i < 4; i++) {
-            result[idx] = i;
-            backtracking(idx + 1, result);
+            swipeArr[depth] = i;
+            bt(depth + 1);
         }
     }
 
-    static void move(int cmd) {
-        boolean[][] combined = new boolean[N][N];
-        if (cmd == 0) {
-            // 위로 밀착
-            for (int c = 0; c < N; c++) {
-                for (int r = 0; r < N; r++) {
-                    if (map[r][c] == 0) continue;
-                    Pos p = new Pos(r, c, map[r][c]);
-                    while (true) {
-                        int nr = p.r + dr[cmd];
-                        int nc = p.c + dc[cmd];
+    static int[][] swipeAll(int s, int[][] newMap) {
 
-                        // 다음 이동할 좌표가 맵을 벗어나면 break
-                        if (nr < 0 || nr >= N || nc < 0 || nc >= N) {
-                            if (p.isCombined) {
-                                combined[p.r][p.c] = true;
+        switch (s) {
+            // 상
+            case 0:
+                for (int i = 0; i < N; i++) {
+                    int index = 0; // 값을 넣을 위치
+                    int block = 0; // 최근 블록의 값
+                    for (int j = 0; j < N; j++) {
+                        // 현재 블록의 값이 0이 아니라면
+                        if (newMap[j][i] != 0) {
+                            // 최근 블록의 값과 현재 블록의 값이 같다면
+                            if (block == newMap[j][i]) {
+                                // 블록이 합쳐진다
+                                newMap[index - 1][i] = block * 2;
+                                // 블록이 합쳐졌으므로 0으로 갱신
+                                block = 0;
+                                // 값을 합쳤으므로 현재 블록의 값을 0으로 갱신
+                                newMap[j][i] = 0;
                             }
-                            break;
-                        }
-                        // 이동할 좌표의 value가 0이 아니고, 현재 좌표의 value와 이동할 좌표의 value가 다르면 break
-                        if (map[nr][nc] != 0 && map[p.r][p.c] != map[nr][nc]) {
-                            if (p.isCombined) {
-                                combined[p.r][p.c] = true;
+                            // 최근 블록의 값과 현재 블록의 값이 다르다면
+                            else {
+                                // 블록 변수의 값을 현재 블록의 값으로 갱신
+                                block = newMap[j][i];
+                                // 현재 블록의 값을 0으로 바꿔줌
+                                newMap[j][i] = 0;
+                                // 값을 넣을 위치에 최근 블록의 값을 넣음
+                                newMap[index][i] = block;
+                                // 값을 넣을 위치 +1
+                                index++;
                             }
-                            break;
                         }
-
-                        // 다음 좌표의 value가 0인 경우
-                        if (map[nr][nc] == 0) {
-                            map[nr][nc] = map[p.r][p.c];
-                            map[p.r][p.c] = 0;
-
-                        } else if (map[nr][nc] == map[p.r][p.c] && (combined[nr][nc] || p.isCombined)) {
-                            combined[p.r][p.c] = true;
-                            break;
-                        }
-                        else if (map[nr][nc] == map[p.r][p.c] && !combined[nr][nc] && !p.isCombined) {
-                            // 다음 좌표와 현재 좌표가 같은 경우
-                            map[nr][nc] *= 2;
-                            map[p.r][p.c] = 0;
-                            p.isCombined = true;
-                        }
-                        p.r = nr;
-                        p.c = nc;
                     }
                 }
-            }
-        }
-        if (cmd == 1) {
-            // 오른쪽으로 밀착
-            for (int r = 0; r < N; r++) {
-                for (int c = N - 1; c >= 0; c--) {
-                    if (map[r][c] == 0) continue;
-                    Pos p = new Pos(r, c, map[r][c]);
-                    while (true) {
-                        int nr = p.r + dr[cmd];
-                        int nc = p.c + dc[cmd];
-
-                        // 다음 이동할 좌표가 맵을 벗어나면 break
-                        if (nr < 0 || nr >= N || nc < 0 || nc >= N) {
-                            if (p.isCombined) {
-                                combined[p.r][p.c] = true;
+                break;
+            // 하
+            case 1:
+                for (int i = 0; i < N; i++) {
+                    int index = N - 1;
+                    int block = 0;
+                    for (int j = N - 1; j >= 0; j--) {
+                        if (newMap[j][i] != 0) {
+                            if (block == newMap[j][i]) {
+                                newMap[index + 1][i] = block * 2;
+                                block = 0;
+                                newMap[j][i] = 0;
+                            } else {
+                                block = newMap[j][i];
+                                newMap[j][i] = 0;
+                                newMap[index][i] = block;
+                                index--;
                             }
-                            break;
                         }
-                        // 이동할 좌표의 value가 0이 아니고, 현재 좌표의 value와 이동할 좌표의 value가 다르면 break
-                        if (map[nr][nc] != 0 && map[p.r][p.c] != map[nr][nc]) {
-                            if (p.isCombined) {
-                                combined[p.r][p.c] = true;
-                            }
-                            break;
-                        }
-
-                        // 다음 좌표의 value가 0인 경우
-                        if (map[nr][nc] == 0) {
-                            map[nr][nc] = map[p.r][p.c];
-                            map[p.r][p.c] = 0;
-
-                        } else if (map[nr][nc] == map[p.r][p.c] && (combined[nr][nc] || p.isCombined)) {
-                            combined[p.r][p.c] = true;
-                            break;
-                        }
-                        else if (map[nr][nc] == map[p.r][p.c] && !combined[nr][nc] && !p.isCombined) {
-                            // 다음 좌표와 현재 좌표가 같은 경우
-                            map[nr][nc] *= 2;
-                            map[p.r][p.c] = 0;
-                            p.isCombined = true;
-                        }
-                        p.r = nr;
-                        p.c = nc;
                     }
                 }
-            }
-        }
-        if (cmd == 2) {
-            // 아래로 밀착
-            for (int c = N - 1; c >= 0; c--) {
-                for (int r = N - 1; r >= 0; r--) {
-                    if (map[r][c] == 0) continue;
-                    Pos p = new Pos(r, c, map[r][c]);
-                    while (true) {
-                        int nr = p.r + dr[cmd];
-                        int nc = p.c + dc[cmd];
-
-                        // 다음 이동할 좌표가 맵을 벗어나면 break
-                        if (nr < 0 || nr >= N || nc < 0 || nc >= N) {
-                            if (p.isCombined) {
-                                combined[p.r][p.c] = true;
+                break;
+            // 좌
+            case 2:
+                for (int i = 0; i < N; i++) {
+                    int index = 0;
+                    int block = 0;
+                    for (int j = 0; j < N; j++) {
+                        if (newMap[i][j] != 0) {
+                            if (block == newMap[i][j]) {
+                                newMap[i][index - 1] = block * 2;
+                                block = 0;
+                                newMap[i][j] = 0;
+                            } else {
+                                block = newMap[i][j];
+                                newMap[i][j] = 0;
+                                newMap[i][index] = block;
+                                index++;
                             }
-                            break;
                         }
-                        // 이동할 좌표의 value가 0이 아니고, 현재 좌표의 value와 이동할 좌표의 value가 다르면 break
-                        if (map[nr][nc] != 0 && map[p.r][p.c] != map[nr][nc]) {
-                            if (p.isCombined) {
-                                combined[p.r][p.c] = true;
-                            }
-                            break;
-                        }
-
-                        // 다음 좌표의 value가 0인 경우
-                        if (map[nr][nc] == 0) {
-                            map[nr][nc] = map[p.r][p.c];
-                            map[p.r][p.c] = 0;
-
-                        } else if (map[nr][nc] == map[p.r][p.c] && (combined[nr][nc] || p.isCombined)) {
-                            combined[p.r][p.c] = true;
-                            break;
-                        }
-                        else if (map[nr][nc] == map[p.r][p.c] && !combined[nr][nc] && !p.isCombined) {
-                            // 다음 좌표와 현재 좌표가 같은 경우
-                            map[nr][nc] *= 2;
-                            map[p.r][p.c] = 0;
-                            p.isCombined = true;
-                        }
-                        p.r = nr;
-                        p.c = nc;
                     }
                 }
-            }
-        }
-        if (cmd == 3) {
-            // 왼쪽으로 밀착
-            for (int r = N - 1; r >= 0; r--) {
-                for (int c = 0; c < N; c++) {
-                    if (map[r][c] == 0) continue;
-                    Pos p = new Pos(r, c, map[r][c]);
-                    while (true) {
-                        int nr = p.r + dr[cmd];
-                        int nc = p.c + dc[cmd];
-
-                        // 다음 이동할 좌표가 맵을 벗어나면 break
-                        if (nr < 0 || nr >= N || nc < 0 || nc >= N) {
-                            if (p.isCombined) {
-                                combined[p.r][p.c] = true;
+                break;
+            // 우
+            case 3:
+                for (int i = 0; i < N; i++) {
+                    int index = N - 1;
+                    int block = 0;
+                    for (int j = N - 1; j >= 0; j--) {
+                        if (newMap[i][j] != 0) {
+                            if (block == newMap[i][j]) {
+                                newMap[i][index + 1] = block * 2;
+                                block = 0;
+                                newMap[i][j] = 0;
+                            } else {
+                                block = newMap[i][j];
+                                newMap[i][j] = 0;
+                                newMap[i][index] = block;
+                                index--;
                             }
-                            break;
                         }
-                        // 이동할 좌표의 value가 0이 아니고, 현재 좌표의 value와 이동할 좌표의 value가 다르면 break
-                        if (map[nr][nc] != 0 && map[p.r][p.c] != map[nr][nc]) {
-                            if (p.isCombined) {
-                                combined[p.r][p.c] = true;
-                            }
-                            break;
-                        }
-
-                        // 다음 좌표의 value가 0인 경우
-                        if (map[nr][nc] == 0) {
-                            map[nr][nc] = map[p.r][p.c];
-                            map[p.r][p.c] = 0;
-
-                        } else if (map[nr][nc] == map[p.r][p.c] && (combined[nr][nc] || p.isCombined)) {
-                            combined[p.r][p.c] = true;
-                            break;
-                        }
-                        else if (map[nr][nc] == map[p.r][p.c] && !combined[nr][nc] && !p.isCombined) {
-                            // 다음 좌표와 현재 좌표가 같은 경우
-                            map[nr][nc] *= 2;
-                            map[p.r][p.c] = 0;
-                            p.isCombined = true;
-                        }
-                        p.r = nr;
-                        p.c = nc;
                     }
                 }
-            }
+                break;
         }
-
+        // 명령을 수행한 후의 배열 상태를 반환한다.
+        return newMap;
     }
+
 }
