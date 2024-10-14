@@ -27,7 +27,6 @@ class Solution {
             if(!onBridge.isEmpty()) {   // 다리에서 트럭이 내려오는 로직
                 Truck truck = onBridge.peek();
                 if(time - truck.t >= bridge_length) {
-                    // System.out.println("off " + time + " " + truck.t);
                     onBridge.poll();
                     totalWeight -= truck.w;
                     if(onBridge.isEmpty() && trucks.isEmpty()) return time;
@@ -37,7 +36,6 @@ class Solution {
             if(!trucks.isEmpty()) {     // 다리에 트럭이 올라가는 로직
                 int truckWeight = trucks.peek();
                 if(totalWeight + truckWeight <= weight) {
-                    // System.out.println("on " + time);
                     onBridge.offer(new Truck(truckWeight, time));
                     totalWeight += truckWeight;
                     trucks.poll();
@@ -45,8 +43,5 @@ class Solution {
             }
             
         }
-        
-        
-        // return answer;
     }
 }
