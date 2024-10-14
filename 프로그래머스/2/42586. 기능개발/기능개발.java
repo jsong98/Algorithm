@@ -14,6 +14,7 @@ class Solution {
         while(!que.isEmpty()) {
             int k = que.peek();
             int temp = 0;
+            
             while(k <= t) {
                 temp++;
                 que.poll();
@@ -23,10 +24,8 @@ class Solution {
                 }
                 k = que.peek();
                 if(k > t) {
-                    System.out.println(temp);
                     answer.add(temp);
                 }
-                
             }
             
             t++;
