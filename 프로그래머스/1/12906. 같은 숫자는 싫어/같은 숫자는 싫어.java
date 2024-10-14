@@ -8,7 +8,7 @@ public class Solution {
             if(temp != arr[i]) que.offer(arr[i]);
             temp = arr[i];
         }
-        System.out.println(que.size());
+
         int[] answer = new int[que.size()];
         for(int i = 0; i < answer.length; i++) {
             answer[i] = que.poll();
