@@ -2,20 +2,38 @@ import java.util.*;
 class Solution {
     public long solution(int n, int[] times) {
         long answer = 0;
-        Arrays.sort(times);
-        long left = 0;
-        long right = times[times.length-1]*Long.valueOf(n);
-        while(left<=right) {
-            long mid = left + (right-left)/2;
-            long cnt = 0;
-            for(int i = 0; i < times.length; i++) cnt += mid/times[i];
-            if(cnt<n) left = mid+1;
-            else {
-                right = mid-1;
-                answer = mid;
-            }
-        }
-        return answer;
+        System.out.println(Long.MAX_VALUE);
+        long low = 0;
+        long high = Long.MAX_VALUE;
+        
+        long result = binarySearch(times, n, low, high);
+        while(getMax(times, result) == n) result-=1;
+        
+        return result+1;
     }
-
+    
+    public long binarySearch(int[] times, int target, long low, long high) {
+        if(low <= high) {
+            long mid = (low + high) / 2;
+            
+            if(getMax(times, mid) == target) {
+                return mid;
+            } else if(getMax(times, mid) < target) {
+                return binarySearch(times, target, mid+1, high);
+            } else if(getMax(times, mid) > target) {
+                return binarySearch(times, target, low, mid-1);
+            }    
+        }
+        
+        
+        return -1;
+    }
+    
+    public long getMax(int[] times, long time) {
+        long cnt = 0;
+        for(int i = 0; i < times.length; i++) {
+            cnt += time/times[i];
+        }
+        return cnt;
+    }
 }
